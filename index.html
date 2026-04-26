@@ -1,52 +1,40 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Embudo de Ventas</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-  <header>
-    <h1>Bienvenido a Mi Embudo de Ventas</h1>
-    <p>Captura clientes potenciales de forma profesional 🚀</p>
-  </header>
+const firebaseConfig = {
+  apiKey: "AIzaSyAeWRoVhh8ZnGMb9bs6N5faAqOaoCZEol8",
+  authDomain: "mi-embudo-oficial.firebaseapp.com",
+  projectId: "mi-embudo-oficial",
+  storageBucket: "mi-embudo-oficial.firebasestorage.app",
+  messagingSenderId: "426831146692",
+  appId: "1:426831146692:web:c35005f06cb410ed8ae391"
+};
 
-  <main>
-    <section class="formulario">
-      <h2>Déjanos tus datos</h2>
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-      <form id="leadForm">
-        <input
-          type="text"
-          id="nombre"
-          placeholder="Tu nombre"
-          required
-        >
+const form = document.getElementById("leadForm");
 
-        <input
-          type="email"
-          id="email"
-          placeholder="Tu correo electrónico"
-          required
-        >
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-        <input
-          type="tel"
-          id="telefono"
-          placeholder="Tu teléfono"
-          required
-        >
+  const nombre = document.getElementById("nombre").value;
+  const email = document.getElementById("email").value;
+  const telefono = document.getElementById("telefono").value;
 
-        <button type="submit">
-          Quiero más información
-        </button>
-      </form>
-    </section>
-  </main>
+  try {
+    await addDoc(collection(db, "leads"), {
+      nombre,
+      email,
+      telefono,
+      fecha: new Date()
+    });
 
-  <script type="module" src="script.js"></script>
+    alert("Lead guardado correctamente 🔥");
+    form.reset();
 
-</body>
-</html>
+  } catch (error) {
+    console.error("Error:", error);
+    alert("Error al guardar lead");
+  }
+});
