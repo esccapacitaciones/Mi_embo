@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mi Embudo de Ventas</title>
+  <title>Embudo Pro</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
   <header>
-    <h1>Embudo de Ventas 🚀</h1>
-    <p>Captura y gestiona tus leads</p>
+    <h1>Embudo de Ventas PRO 🚀</h1>
+    <p>Captura y gestiona leads en tiempo real</p>
   </header>
 
   <main>
 
-    <section class="formulario">
+    <section>
       <h2>Nuevo Lead</h2>
 
       <form id="leadForm">
@@ -29,8 +29,11 @@
 
     <hr>
 
-    <section class="leads">
+    <section>
       <h2>Leads guardados</h2>
+
+      <button onclick="exportarCSV()">📥 Exportar a Excel</button>
+
       <div id="leadsList"></div>
     </section>
 
