@@ -2,7 +2,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/fireba
 import {
   getFirestore,
   collection,
-  addDoc,
   getDocs,
   updateDoc,
   doc
@@ -22,7 +21,9 @@ const db = getFirestore(app);
 
 let leadsGlobal = [];
 
-// LOGIN
+/* =======================
+   LOGIN
+======================= */
 window.login = function () {
   const pass = document.getElementById("password").value;
 
@@ -35,7 +36,9 @@ window.login = function () {
   }
 };
 
-// CARGAR LEADS
+/* =======================
+   CARGAR LEADS
+======================= */
 async function cargarLeads() {
   const leadsList = document.getElementById("leadsList");
   leadsList.innerHTML = "";
@@ -53,18 +56,22 @@ async function cargarLeads() {
   });
 }
 
-// HTML de cada lead
+/* =======================
+   RENDER LEAD
+======================= */
 function renderLead(data) {
   return `
-    <div style="border:1px solid #ccc;padding:10px;margin:5px;">
+    <div style="border:1px solid #ccc;padding:10px;margin:10px;">
       <b>${data.nombre}</b><br>
       ${data.email}<br>
       ${data.telefono}<br>
 
-      <b>Estado:</b> ${data.estado || "Nuevo"}<br>
+      <b>Estado:</b> ${data.estado || "Nuevo"}<br><br>
 
       <button onclick="cambiarEstado('${data.id}', 'Contactado')">Contactado</button>
       <button onclick="cambiarEstado('${data.id}', 'Vendido')">Vendido</button>
+
+      <br><br>
 
       <a href="https://wa.me/57${data.telefono}" target="_blank">
         📲 WhatsApp
@@ -73,7 +80,9 @@ function renderLead(data) {
   `;
 }
 
-// CAMBIAR ESTADO
+/* =======================
+   CAMBIAR ESTADO
+======================= */
 window.cambiarEstado = async function (id, estado) {
   await updateDoc(doc(db, "leads", id), {
     estado: estado
@@ -82,7 +91,9 @@ window.cambiarEstado = async function (id, estado) {
   cargarLeads();
 };
 
-// BUSCADOR
+/* =======================
+   BUSCADOR
+======================= */
 window.buscar = function () {
   const value = document.getElementById("search").value.toLowerCase();
 
@@ -99,7 +110,9 @@ window.buscar = function () {
   });
 };
 
-// EXPORTAR CSV
+/* =======================
+   EXPORTAR CSV
+======================= */
 window.exportarCSV = function () {
   let csv = "Nombre,Email,Telefono,Estado\n";
 
@@ -112,6 +125,6 @@ window.exportarCSV = function () {
 
   const a = document.createElement("a");
   a.href = url;
-  a.download = "leads.csv";
+  a.download = "leads_logisticos_ayg.csv";
   a.click();
 };
