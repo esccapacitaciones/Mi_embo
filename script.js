@@ -1,5 +1,10 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAeWRoVhh8ZnGMb9bs6N5faAqOaoCZEol8",
@@ -13,28 +18,43 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// Guardar lead
 const form = document.getElementById("leadForm");
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  const nombre = document.getElementById("nombre").value;
-  const email = document.getElementById("email").value;
-  const telefono = document.getElementById("telefono").value;
+  await addDoc(collection(db, "leads"), {
+    nombre: document.getElementById("nombre").value,
+    email: document.getElementById("email").value,
+    telefono: document.getElementById("telefono").value,
+    fecha: new Date()
+  });
 
-  try {
-    await addDoc(collection(db, "leads"), {
-      nombre,
-      email,
-      telefono,
-      fecha: new Date()
-    });
-
-    alert("Lead guardado correctamente 🔥");
-    form.reset();
-
-  } catch (error) {
-    console.error(error);
-    alert("Error al guardar lead");
-  }
+  alert("Lead guardado 🔥");
+  form.reset();
+  cargarLeads();
 });
+
+// Mostrar leads
+const leadsList = document.getElementById("leadsList");
+
+async function cargarLeads() {
+  leadsList.innerHTML = "";
+
+  const snapshot = await getDocs(collection(db, "leads"));
+
+  snapshot.forEach((doc) => {
+    const data = doc.data();
+
+    leadsList.innerHTML += `
+      <div style="padding:10px;border:1px solid #ccc;margin:5px;">
+        <b>${data.nombre}</b><br>
+        ${data.email}<br>
+        ${data.telefono}
+      </div>
+    `;
+  });
+}
+
+cargarLeads();
