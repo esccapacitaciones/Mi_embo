@@ -3,28 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CRM Embudo PRO</title>
+  <title>CRM Pro</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
   <header>
-    <h1>CRM de Ventas 🚀</h1>
+    <h1>CRM PRO 🚀</h1>
   </header>
 
-  <!-- LOGIN SIMPLE -->
+  <!-- LOGIN -->
   <section id="loginBox">
-    <h2>Acceso administrador</h2>
+    <h2>Acceso</h2>
     <input type="password" id="password" placeholder="Contraseña">
     <button onclick="login()">Entrar</button>
   </section>
 
-  <!-- PANEL CRM -->
+  <!-- PANEL -->
   <section id="crmPanel" style="display:none;">
 
     <h2>Leads</h2>
 
-    <input type="text" id="search" placeholder="Buscar lead...">
+    <input type="text" id="search" placeholder="Buscar lead..." onkeyup="buscar()">
 
     <button onclick="exportarCSV()">📥 Exportar Excel</button>
 
