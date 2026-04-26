@@ -3,7 +3,9 @@ import {
   getFirestore,
   collection,
   addDoc,
-  getDocs
+  getDocs,
+  updateDoc,
+  doc
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -20,7 +22,7 @@ const db = getFirestore(app);
 
 let leadsGlobal = [];
 
-// LOGIN SIMPLE
+// LOGIN
 window.login = function () {
   const pass = document.getElementById("password").value;
 
@@ -42,26 +44,46 @@ async function cargarLeads() {
 
   leadsGlobal = [];
 
-  snapshot.forEach((doc) => {
-    const data = doc.data();
+  snapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    data.id = docSnap.id;
     leadsGlobal.push(data);
 
-    leadsList.innerHTML += `
-      <div style="border:1px solid #ccc;padding:10px;margin:5px;">
-        <b>${data.nombre}</b><br>
-        ${data.email}<br>
-        ${data.telefono}<br>
-
-        <a href="https://wa.me/57${data.telefono}" target="_blank">
-          📲 WhatsApp
-        </a>
-      </div>
-    `;
+    leadsList.innerHTML += renderLead(data);
   });
 }
 
+// HTML de cada lead
+function renderLead(data) {
+  return `
+    <div style="border:1px solid #ccc;padding:10px;margin:5px;">
+      <b>${data.nombre}</b><br>
+      ${data.email}<br>
+      ${data.telefono}<br>
+
+      <b>Estado:</b> ${data.estado || "Nuevo"}<br>
+
+      <button onclick="cambiarEstado('${data.id}', 'Contactado')">Contactado</button>
+      <button onclick="cambiarEstado('${data.id}', 'Vendido')">Vendido</button>
+
+      <a href="https://wa.me/57${data.telefono}" target="_blank">
+        📲 WhatsApp
+      </a>
+    </div>
+  `;
+}
+
+// CAMBIAR ESTADO
+window.cambiarEstado = async function (id, estado) {
+  await updateDoc(doc(db, "leads", id), {
+    estado: estado
+  });
+
+  cargarLeads();
+};
+
 // BUSCADOR
-window.search = function () {
+window.buscar = function () {
   const value = document.getElementById("search").value.toLowerCase();
 
   const filtered = leadsGlobal.filter(l =>
@@ -72,27 +94,17 @@ window.search = function () {
   const leadsList = document.getElementById("leadsList");
   leadsList.innerHTML = "";
 
-  filtered.forEach((data) => {
-    leadsList.innerHTML += `
-      <div style="border:1px solid #ccc;padding:10px;margin:5px;">
-        <b>${data.nombre}</b><br>
-        ${data.email}<br>
-        ${data.telefono}<br>
-
-        <a href="https://wa.me/57${data.telefono}" target="_blank">
-          📲 WhatsApp
-        </a>
-      </div>
-    `;
+  filtered.forEach(l => {
+    leadsList.innerHTML += renderLead(l);
   });
 };
 
 // EXPORTAR CSV
 window.exportarCSV = function () {
-  let csv = "Nombre,Email,Telefono\n";
+  let csv = "Nombre,Email,Telefono,Estado\n";
 
   leadsGlobal.forEach(l => {
-    csv += `${l.nombre},${l.email},${l.telefono}\n`;
+    csv += `${l.nombre},${l.email},${l.telefono},${l.estado || "Nuevo"}\n`;
   });
 
   const blob = new Blob([csv], { type: "text/csv" });
