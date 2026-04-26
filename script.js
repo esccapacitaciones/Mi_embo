@@ -18,21 +18,33 @@ const form = document.getElementById("leadForm");
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  const nombre = document.getElementById("nombre").value;
+  const email = document.getElementById("email").value;
+  const telefono = document.getElementById("telefono").value;
+
   try {
     await addDoc(collection(db, "leads"), {
-      nombre: document.getElementById("nombre").value,
-      email: document.getElementById("email").value,
-      telefono: document.getElementById("telefono").value,
+      nombre,
+      email,
+      telefono,
       fecha: new Date(),
       estado: "Nuevo",
-      empresa: "Logísticos A y G"
+      empresa: "Logísticos A y G",
+      tipo: "empresarial"
     });
 
-    alert("Gracias, pronto te contactamos 🚀");
+    // Evento Meta Ads (conversión)
+    if (typeof fbq !== "undefined") {
+      fbq('track', 'Lead', {
+        content_name: "Asesoría Empresarial"
+      });
+    }
+
+    alert("Solicitud enviada. Te contactaremos pronto 🚀");
     form.reset();
 
   } catch (error) {
     console.error(error);
-    alert("Error al enviar información");
+    alert("Error al enviar la solicitud");
   }
 });
