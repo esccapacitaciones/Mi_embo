@@ -18,29 +18,24 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Guardar lead
-const form = document.getElementById("leadForm");
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  await addDoc(collection(db, "leads"), {
-    nombre: nombre.value,
-    email: email.value,
-    telefono: telefono.value,
-    fecha: new Date()
-  });
-
-  form.reset();
-  cargarLeads();
-});
-
-// Mostrar leads
-const leadsList = document.getElementById("leadsList");
-
 let leadsGlobal = [];
 
+// LOGIN SIMPLE
+window.login = function () {
+  const pass = document.getElementById("password").value;
+
+  if (pass === "1234") {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("crmPanel").style.display = "block";
+    cargarLeads();
+  } else {
+    alert("Contraseña incorrecta");
+  }
+};
+
+// CARGAR LEADS
 async function cargarLeads() {
+  const leadsList = document.getElementById("leadsList");
   leadsList.innerHTML = "";
 
   const snapshot = await getDocs(collection(db, "leads"));
@@ -52,18 +47,47 @@ async function cargarLeads() {
     leadsGlobal.push(data);
 
     leadsList.innerHTML += `
-      <div style="border:1px solid #ddd;padding:10px;margin:5px;">
+      <div style="border:1px solid #ccc;padding:10px;margin:5px;">
         <b>${data.nombre}</b><br>
         ${data.email}<br>
-        ${data.telefono}
+        ${data.telefono}<br>
+
+        <a href="https://wa.me/57${data.telefono}" target="_blank">
+          📲 WhatsApp
+        </a>
       </div>
     `;
   });
 }
 
-cargarLeads();
+// BUSCADOR
+window.search = function () {
+  const value = document.getElementById("search").value.toLowerCase();
 
-// EXPORTAR A CSV (Excel)
+  const filtered = leadsGlobal.filter(l =>
+    l.nombre.toLowerCase().includes(value) ||
+    l.email.toLowerCase().includes(value)
+  );
+
+  const leadsList = document.getElementById("leadsList");
+  leadsList.innerHTML = "";
+
+  filtered.forEach((data) => {
+    leadsList.innerHTML += `
+      <div style="border:1px solid #ccc;padding:10px;margin:5px;">
+        <b>${data.nombre}</b><br>
+        ${data.email}<br>
+        ${data.telefono}<br>
+
+        <a href="https://wa.me/57${data.telefono}" target="_blank">
+          📲 WhatsApp
+        </a>
+      </div>
+    `;
+  });
+};
+
+// EXPORTAR CSV
 window.exportarCSV = function () {
   let csv = "Nombre,Email,Telefono\n";
 
