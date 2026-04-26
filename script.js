@@ -25,13 +25,12 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
   await addDoc(collection(db, "leads"), {
-    nombre: document.getElementById("nombre").value,
-    email: document.getElementById("email").value,
-    telefono: document.getElementById("telefono").value,
+    nombre: nombre.value,
+    email: email.value,
+    telefono: telefono.value,
     fecha: new Date()
   });
 
-  alert("Lead guardado 🔥");
   form.reset();
   cargarLeads();
 });
@@ -39,16 +38,21 @@ form.addEventListener("submit", async (e) => {
 // Mostrar leads
 const leadsList = document.getElementById("leadsList");
 
+let leadsGlobal = [];
+
 async function cargarLeads() {
   leadsList.innerHTML = "";
 
   const snapshot = await getDocs(collection(db, "leads"));
 
+  leadsGlobal = [];
+
   snapshot.forEach((doc) => {
     const data = doc.data();
+    leadsGlobal.push(data);
 
     leadsList.innerHTML += `
-      <div style="padding:10px;border:1px solid #ccc;margin:5px;">
+      <div style="border:1px solid #ddd;padding:10px;margin:5px;">
         <b>${data.nombre}</b><br>
         ${data.email}<br>
         ${data.telefono}
@@ -58,3 +62,20 @@ async function cargarLeads() {
 }
 
 cargarLeads();
+
+// EXPORTAR A CSV (Excel)
+window.exportarCSV = function () {
+  let csv = "Nombre,Email,Telefono\n";
+
+  leadsGlobal.forEach(l => {
+    csv += `${l.nombre},${l.email},${l.telefono}\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "leads.csv";
+  a.click();
+};
