@@ -3,41 +3,34 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Embudo Pro</title>
+  <title>CRM Embudo PRO</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
   <header>
-    <h1>Embudo de Ventas PRO 🚀</h1>
-    <p>Captura y gestiona leads en tiempo real</p>
+    <h1>CRM de Ventas 🚀</h1>
   </header>
 
-  <main>
+  <!-- LOGIN SIMPLE -->
+  <section id="loginBox">
+    <h2>Acceso administrador</h2>
+    <input type="password" id="password" placeholder="Contraseña">
+    <button onclick="login()">Entrar</button>
+  </section>
 
-    <section>
-      <h2>Nuevo Lead</h2>
+  <!-- PANEL CRM -->
+  <section id="crmPanel" style="display:none;">
 
-      <form id="leadForm">
-        <input type="text" id="nombre" placeholder="Nombre" required>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="tel" id="telefono" placeholder="Teléfono" required>
+    <h2>Leads</h2>
 
-        <button type="submit">Guardar Lead</button>
-      </form>
-    </section>
+    <input type="text" id="search" placeholder="Buscar lead...">
 
-    <hr>
+    <button onclick="exportarCSV()">📥 Exportar Excel</button>
 
-    <section>
-      <h2>Leads guardados</h2>
+    <div id="leadsList"></div>
 
-      <button onclick="exportarCSV()">📥 Exportar a Excel</button>
-
-      <div id="leadsList"></div>
-    </section>
-
-  </main>
+  </section>
 
   <script type="module" src="script.js"></script>
 
