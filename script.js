@@ -2,12 +2,12 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/fireba
 import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "TU_API_KEY",
-  authDomain: "TU_AUTH_DOMAIN",
-  projectId: "TU_PROJECT_ID",
-  storageBucket: "TU_STORAGE_BUCKET",
-  messagingSenderId: "TU_MESSAGING_SENDER_ID",
-  appId: "TU_APP_ID"
+  apiKey: "AIzaSyAeWRoVhh8ZnGMb9bs6N5faAqOaoCZEol8",
+  authDomain: "mi-embudo-oficial.firebaseapp.com",
+  projectId: "mi-embudo-oficial",
+  storageBucket: "mi-embudo-oficial.firebasestorage.app",
+  messagingSenderId: "426831146692",
+  appId: "1:426831146692:web:c35005f06cb410ed8ae391"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -24,17 +24,18 @@ form.addEventListener("submit", async (e) => {
 
   try {
     await addDoc(collection(db, "leads"), {
-      nombre,
-      email,
-      telefono,
+      nombre: nombre,
+      email: email,
+      telefono: telefono,
       fecha: new Date(),
       estado: "Nuevo",
-      empresa: "Logísticos A y G"
+      empresa: "Logísticos A y G",
+      interes: "Servicios empresariales"
     });
 
     const mensaje = `Hola, soy ${nombre}. Solicité información sobre los servicios empresariales de Logísticos A y G.`;
 
-    const numeroEmpresa = "57TU_NUMERO_AQUI";
+    const numeroEmpresa = "573224026017";
 
     window.open(
       `https://wa.me/${numeroEmpresa}?text=${encodeURIComponent(mensaje)}`,
@@ -45,7 +46,7 @@ form.addEventListener("submit", async (e) => {
     form.reset();
 
   } catch (error) {
-    console.error(error);
-    alert("Error al enviar solicitud");
+    console.error("Error:", error);
+    alert("Error al enviar la solicitud");
   }
 });
