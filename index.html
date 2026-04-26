@@ -3,35 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Logísticos A y G - CRM</title>
+  <title>Logísticos A y G | Soluciones Logísticas</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <header>
+  <header style="text-align:center;padding:20px;">
     <h1>LOGÍSTICOS A y G 🚀</h1>
-    <p>Sistema de captación y gestión de clientes</p>
+    <p>Soluciones logísticas y gestión de envíos en Colombia</p>
   </header>
 
-  <!-- LOGIN -->
-  <section id="loginBox">
-    <h2>Acceso administrador</h2>
-    <input type="password" id="password" placeholder="Contraseña">
-    <button onclick="login()">Entrar</button>
-  </section>
+  <main>
 
-  <!-- PANEL CRM -->
-  <section id="crmPanel" style="display:none;">
+    <section style="max-width:500px;margin:auto;">
+      <h2>Solicita información</h2>
 
-    <h2>Leads registrados</h2>
+      <form id="leadForm">
+        <input type="text" id="nombre" placeholder="Nombre completo" required>
+        <input type="email" id="email" placeholder="Correo electrónico" required>
+        <input type="tel" id="telefono" placeholder="Teléfono" required>
 
-    <input type="text" id="search" placeholder="Buscar lead..." onkeyup="buscar()">
+        <button type="submit">Quiero asesoría</button>
+      </form>
+    </section>
 
-    <button onclick="exportarCSV()">📥 Exportar Excel</button>
+    <hr>
 
-    <div id="leadsList"></div>
+    <section style="text-align:center;">
+      <h2>¿Qué hacemos?</h2>
+      <p>Gestionamos soluciones logísticas rápidas, seguras y eficientes para tu negocio.</p>
+    </section>
 
-  </section>
+  </main>
 
   <script type="module" src="script.js"></script>
 
