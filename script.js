@@ -1,35 +1,34 @@
-document.addEventListener("DOMContentLoaded", () => {
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
-  const form = document.getElementById("formulario");
+const firebaseConfig = {
+  apiKey: "AIzaSyAeWRoVhh8ZnGMb9bs6N5faAqOaoCZEol8",
+  authDomain: "mi-embudo-oficial.firebaseapp.com",
+  projectId: "mi-embudo-oficial",
+  storageBucket: "mi-embudo-oficial.firebasestorage.app",
+  messagingSenderId: "426831146692",
+  appId: "1:426831146692:web:c35005f06cb410ed8ae391"
+};
 
-  if (form) {
-    form.addEventListener("submit", function(e) {
-      e.preventDefault();
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-      const nombre = document.getElementById("nombre").value;
-      const correo = document.getElementById("correo").value;
+const form = document.getElementById("leadForm");
 
-      let leads = JSON.parse(localStorage.getItem("leads")) || [];
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
 
-      leads.push({ nombre, correo });
+  const nombre = document.getElementById("nombre").value;
+  const email = document.getElementById("email").value;
+  const telefono = document.getElementById("telefono").value;
 
-      localStorage.setItem("leads", JSON.stringify(leads));
-
-      window.location.href = "gracias.html";
-    });
-  }
-
-});
-
-function verLeads() {
-  let lista = document.getElementById("lista");
-  lista.innerHTML = "";
-
-  let leads = JSON.parse(localStorage.getItem("leads")) || [];
-
-  leads.forEach(l => {
-    let li = document.createElement("li");
-    li.textContent = l.nombre + " - " + l.correo;
-    lista.appendChild(li);
+  await addDoc(collection(db, "leads"), {
+    nombre,
+    email,
+    telefono,
+    fecha: new Date()
   });
-}
+
+  alert("Lead guardado correctamente 🔥");
+  form.reset();
+});
