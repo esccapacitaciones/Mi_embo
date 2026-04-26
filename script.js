@@ -22,13 +22,19 @@ form.addEventListener("submit", async (e) => {
   const email = document.getElementById("email").value;
   const telefono = document.getElementById("telefono").value;
 
-  await addDoc(collection(db, "leads"), {
-    nombre,
-    email,
-    telefono,
-    fecha: new Date()
-  });
+  try {
+    await addDoc(collection(db, "leads"), {
+      nombre,
+      email,
+      telefono,
+      fecha: new Date()
+    });
 
-  alert("Lead guardado correctamente 🔥");
-  form.reset();
+    alert("Lead guardado correctamente 🔥");
+    form.reset();
+
+  } catch (error) {
+    console.error(error);
+    alert("Error al guardar lead");
+  }
 });
