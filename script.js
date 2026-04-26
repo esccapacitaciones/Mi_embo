@@ -1,130 +1,42 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  updateDoc,
-  doc
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logísticos A y G | Soluciones Logísticas</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAeWRoVhh8ZnGMb9bs6N5faAqOaoCZEol8",
-  authDomain: "mi-embudo-oficial.firebaseapp.com",
-  projectId: "mi-embudo-oficial",
-  storageBucket: "mi-embudo-oficial.firebasestorage.app",
-  messagingSenderId: "426831146692",
-  appId: "1:426831146692:web:c35005f06cb410ed8ae391"
-};
+  <header style="text-align:center;padding:20px;">
+    <h1>LOGÍSTICOS A y G 🚀</h1>
+    <p>Soluciones logísticas y gestión de envíos en Colombia</p>
+  </header>
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+  <main>
 
-let leadsGlobal = [];
+    <section style="max-width:500px;margin:auto;">
+      <h2>Solicita información</h2>
 
-/* =======================
-   LOGIN
-======================= */
-window.login = function () {
-  const pass = document.getElementById("password").value;
+      <form id="leadForm">
+        <input type="text" id="nombre" placeholder="Nombre completo" required>
+        <input type="email" id="email" placeholder="Correo electrónico" required>
+        <input type="tel" id="telefono" placeholder="Teléfono" required>
 
-  if (pass === "1234") {
-    document.getElementById("loginBox").style.display = "none";
-    document.getElementById("crmPanel").style.display = "block";
-    cargarLeads();
-  } else {
-    alert("Contraseña incorrecta");
-  }
-};
+        <button type="submit">Quiero asesoría</button>
+      </form>
+    </section>
 
-/* =======================
-   CARGAR LEADS
-======================= */
-async function cargarLeads() {
-  const leadsList = document.getElementById("leadsList");
-  leadsList.innerHTML = "";
+    <hr>
 
-  const snapshot = await getDocs(collection(db, "leads"));
+    <section style="text-align:center;">
+      <h2>¿Qué hacemos?</h2>
+      <p>Gestionamos soluciones logísticas rápidas, seguras y eficientes para tu negocio.</p>
+    </section>
 
-  leadsGlobal = [];
+  </main>
 
-  snapshot.forEach((docSnap) => {
-    const data = docSnap.data();
-    data.id = docSnap.id;
-    leadsGlobal.push(data);
+  <script type="module" src="script.js"></script>
 
-    leadsList.innerHTML += renderLead(data);
-  });
-}
-
-/* =======================
-   RENDER LEAD
-======================= */
-function renderLead(data) {
-  return `
-    <div style="border:1px solid #ccc;padding:10px;margin:10px;">
-      <b>${data.nombre}</b><br>
-      ${data.email}<br>
-      ${data.telefono}<br>
-
-      <b>Estado:</b> ${data.estado || "Nuevo"}<br><br>
-
-      <button onclick="cambiarEstado('${data.id}', 'Contactado')">Contactado</button>
-      <button onclick="cambiarEstado('${data.id}', 'Vendido')">Vendido</button>
-
-      <br><br>
-
-      <a href="https://wa.me/57${data.telefono}" target="_blank">
-        📲 WhatsApp
-      </a>
-    </div>
-  `;
-}
-
-/* =======================
-   CAMBIAR ESTADO
-======================= */
-window.cambiarEstado = async function (id, estado) {
-  await updateDoc(doc(db, "leads", id), {
-    estado: estado
-  });
-
-  cargarLeads();
-};
-
-/* =======================
-   BUSCADOR
-======================= */
-window.buscar = function () {
-  const value = document.getElementById("search").value.toLowerCase();
-
-  const filtered = leadsGlobal.filter(l =>
-    l.nombre.toLowerCase().includes(value) ||
-    l.email.toLowerCase().includes(value)
-  );
-
-  const leadsList = document.getElementById("leadsList");
-  leadsList.innerHTML = "";
-
-  filtered.forEach(l => {
-    leadsList.innerHTML += renderLead(l);
-  });
-};
-
-/* =======================
-   EXPORTAR CSV
-======================= */
-window.exportarCSV = function () {
-  let csv = "Nombre,Email,Telefono,Estado\n";
-
-  leadsGlobal.forEach(l => {
-    csv += `${l.nombre},${l.email},${l.telefono},${l.estado || "Nuevo"}\n`;
-  });
-
-  const blob = new Blob([csv], { type: "text/csv" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "leads_logisticos_ayg.csv";
-  a.click();
-};
+</body>
+</html>
