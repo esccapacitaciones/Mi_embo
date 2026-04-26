@@ -18,22 +18,29 @@ const form = document.getElementById("leadForm");
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
+  const nombre = document.getElementById("nombre").value;
+  const email = document.getElementById("email").value;
+  const telefono = document.getElementById("telefono").value;
+
   try {
     await addDoc(collection(db, "leads"), {
-      nombre: document.getElementById("nombre").value,
-      email: document.getElementById("email").value,
-      telefono: document.getElementById("telefono").value,
+      nombre,
+      email,
+      telefono,
       fecha: new Date(),
       estado: "Nuevo",
-      empresa: "Logísticos A y G",
-      interes: "servicios empresariales"
+      empresa: "Logísticos A y G"
     });
 
-    if (typeof fbq !== "undefined") {
-      fbq('track', 'Lead');
-    }
-
-    alert("Gracias. Un asesor te contactará pronto 🚀");
+    // Simulación de automatización tipo WhatsApp
+    setTimeout(() => {
+      alert(
+        "🚀 Hola " + nombre + 
+        "\n\nRecibimos tu solicitud empresarial.\n" +
+        "Un asesor de Logísticos A y G te contactará en breve.\n\n" +
+        "¿Qué problema tiene tu empresa actualmente?"
+      );
+    }, 800);
 
     form.reset();
 
